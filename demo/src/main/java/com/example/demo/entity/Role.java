@@ -2,22 +2,15 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @Column(name = "code")
-    private String code = String.valueOf(UUID.randomUUID());
-
-
     @Enumerated(EnumType.STRING)
     @Column(name = "name")
-    private Role roleName;
+    private Roles roleName;
 
     public String getId() {
         return id;
@@ -27,15 +20,11 @@ public class Role {
         this.id = id;
     }
 
-    public Role getRoleName() {
+    public Roles getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(Role roleName) {
+    public void setRoleName(Roles roleName) {
         this.roleName = roleName;
-    }
-
-    public String name() {
-        return null;
     }
 }

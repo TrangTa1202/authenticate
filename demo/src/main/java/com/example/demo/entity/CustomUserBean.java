@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomUserBean implements UserDetails {
-    private static final long serialVerisonUID = -4709084843450077569L;
+    private static final long serialVersionUID = -4709084843450077569L;
     private String id;
     private String username;
     private String email;
-
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -28,16 +27,20 @@ public class CustomUserBean implements UserDetails {
     }
 
     public static CustomUserBean createInstance(User user) {
-        List<GrantedAuthority> authorityList = user.getRoles()
+        List<GrantedAuthority> authorities = user.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
                 .collect(Collectors.toList());
-
-        return new CustomUserBean((user.getId()), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
+        return new CustomUserBean(user.getId(), user.getUserName(),
+                user.getEmail(), user.getPassword(), authorities);
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -47,11 +50,6 @@ public class CustomUserBean implements UserDetails {
     @Override
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override
