@@ -68,6 +68,9 @@ public class AuthController {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
                         roles.add(adminRole);
                         break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+                        roles.add(userRole);
                 }
             });
 
@@ -78,7 +81,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
