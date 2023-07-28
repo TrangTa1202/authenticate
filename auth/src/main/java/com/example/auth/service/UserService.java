@@ -2,9 +2,9 @@ package com.example.auth.service;
 
 import com.example.auth.entity.User;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface UserService {
-    Integer saveUser(User user);
-    Optional<User> findByUsername(String username);
+    User createUser (User user);
+    List<User> loadUserByUsername(String username);
 }

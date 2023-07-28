@@ -1,49 +1,37 @@
 package com.example.auth.controller;
 
 import com.example.auth.entity.User;
-import com.example.auth.entity.UserRequest;
-import com.example.auth.entity.UserResponse;
-import com.example.auth.security.JWTUtil;
 import com.example.auth.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 public class UserController {
     @Autowired
-    private UserService userService;
-    @Autowired
-    private JWTUtil jwtUtil;
-    @Autowired(required = false)
-    private AuthenticationManager authenticationManager;
+    UserService userService;
 
-    @PostMapping("/saveUser")
-    public ResponseEntity<String> saveUser(@RequestBody User user) {
-        Integer id = userService.saveUser(user);
-        return ResponseEntity.ok("Create a user successfully");
+    @PostMapping("/create")
+    public ResponseEntity<User> createUser (@RequestBody User user) throws JsonProcessingException {
+        User initUser = userService.createUser(user);
+        return ResponseEntity.ok(initUser);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserRequest userRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userRequest.getUsername(), userRequest.getPassword()
-        ));
-        String token = jwtUtil.generateToken(userRequest.getUsername());
-
-        return ResponseEntity.ok(new UserResponse(token, "Token generated successfully"));
+    @GetMapping("/require_role_USER")
+    public ResponseEntity<?> require_role_USER() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree("{\"Greeting\": \"You are USER\"}");
+        return ResponseEntity.ok(jsonNode);
     }
 
-    @PostMapping("/getData")
-    public ResponseEntity<String> testAfterLogin(Principal principal) {
-        return ResponseEntity.ok("Accessing data after logging in. You are : " + principal.getName());
+    @GetMapping("/require_role_ADMIN")
+    public ResponseEntity<?> require_role_ADMIN() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree("{\"Greeting\": \"You are ADMIN\"}");
+        return ResponseEntity.ok(jsonNode);
     }
 }
